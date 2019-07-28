@@ -2,14 +2,14 @@ const express = require("express");
 const morgan = require("morgan");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const passport = require("passport");
-require("dotenv").config();
+const passport = require('passport');
+const passportConfig = require('./passport/index');
 
+const userRouter = require('./routes/user');
 
 const app = express();
-passportUserConfig();
-passportAdminConfig();
-//passport 내부의 코드를 실행하기 위해
+passportConfig(passport);
+
 app.set("port", process.env.PORT || 3000);
 
 app.use(morgan("dev"));
@@ -26,13 +26,17 @@ app.use(
         name: "sessionID",
         resave: false,
         saveUninitialized: true,
-        secret: "beansecret",
+        secret: "beansecret", //테스트이기 때문에 공개로 함.
         cookie: {
             httpOnly: true,
             secure: false
         }
     })
 );
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/user', userRouter);
 
 app.use((err, req, res) => {
     res.locals.message = err.message;
