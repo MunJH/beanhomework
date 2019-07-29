@@ -3,6 +3,7 @@ const {
     isLoggedIn,
     isNotLoggedIn
 } = require('./loginCheck');
+const passport = require('passport');
 const User = require('../schemas/user');
 const router = express.Router();
 
@@ -14,13 +15,12 @@ router.post('/signup', isNotLoggedIn, async (req, res, next) => {
         password
     } = req.body;
     try {
-        const exUser = await User.find({
-            where: {
-                id
-            }
+        const exUser = await User.findOne({
+            id: id
         });
         if (exUser) {
             console.log('이미 가입된 아이디 입니다');
+            res.send('이미 가입된 아이디 입니다.');
         }
         await User.create({
             name,
@@ -28,6 +28,8 @@ router.post('/signup', isNotLoggedIn, async (req, res, next) => {
             id,
             password
         });
+        console.log('회원가입 성공');
+        res.send('회원가입 성공');
     } catch (error) {
         console.error(error);
         return next(error);
@@ -48,6 +50,8 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
                 console.error(loginError);
                 return next(loginError);
             }
+            res.send("로그인 성공");
+            console.log('로그인 성공');
         });
     })(req, res, next);
 });

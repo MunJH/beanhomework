@@ -1,5 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const User = require('../schemas/user');
 
 module.exports = (passport) => {
     passport.use(new LocalStrategy({
@@ -7,15 +8,24 @@ module.exports = (passport) => {
         passwordField: 'password'
     }, async (id, password, done) => {
         try {
-            const exUser = await User.find({
-                where: {
-                    id
+            const exUser = await User.findOne({
+                id: id
+            }, (err, user) => {
+                if (err) {
+                    done(null, false, {
+                        message: '오류 발생!'
+                    });
+                }
+                if (!user) {
+                    done(null, false, {
+                        message: '가입되지 않은 회원입니다.'
+                    });
                 }
             });
 
             if (exUser) {
-                const result = await bcrypt.compare(password, exUser.password);
-                if (result) {
+                // const result = await bcrypt.compare(password, exUser.password);
+                if (exUser.password == password) {
                     done(null, exUser);
                 } else {
                     done(null, false, {

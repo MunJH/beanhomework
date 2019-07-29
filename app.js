@@ -3,11 +3,13 @@ const morgan = require("morgan");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const passport = require('passport');
-const passportConfig = require('./passport/index');
+const passportConfig = require('./passport');
 
 const userRouter = require('./routes/user');
+const connect = require('./schemas');
 
 const app = express();
+connect();
 passportConfig(passport);
 
 app.set("port", process.env.PORT || 3000);

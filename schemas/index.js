@@ -5,8 +5,8 @@ module.exports = () => {
         if (process.env.NODE_ENV !== 'production') {
             mongoose.set('debug', true);
         }
-        mongoose.connect('mongodb://localhost:27017/nodejs', {
-            dbName: 'nodejs',
+        mongoose.connect('mongodb://localhost:27017/beanhomework', {
+            dbName: 'beanhomework',
         }, (error) => {
             if (error) {
                 console.log('몽고디비 연결 에러', error);
@@ -24,5 +24,4 @@ module.exports = () => {
         connect();
     });
     require('./user');
-    require('./comment');
 };
