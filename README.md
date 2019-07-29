@@ -9,3 +9,6 @@
 로그인 요청: localhost:3000/user/login   요청ex> {id:"abc",password:"1234"}
 
 
+숙제이기 때문에 암호화같은 보안적인건 안했음 :(
+
+
